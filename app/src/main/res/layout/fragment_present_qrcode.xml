@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="fi.dvv.digiid.poc.wallet.ui.credentials.WalletViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/qr_code_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/qrcode_padding"
+            android:layout_marginTop="@dimen/qrcode_padding"
+            android:layout_marginEnd="@dimen/qrcode_padding"
+            android:layout_marginBottom="@dimen/qrcode_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:qrcode="@{viewModel.qrCode}"
+            tools:srcCompat="@color/black"
+            android:contentDescription="@string/wallet_qr_code_accessibility_label" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

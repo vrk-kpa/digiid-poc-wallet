@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/walletFragment">
+
+    <fragment
+        android:id="@+id/walletFragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.credentials.WalletFragment"
+        android:label="WalletFragment" >
+        <action
+            android:id="@+id/toShareCredentials"
+            app:destination="@id/shareCredentialsFragment" />
+        <action
+            android:id="@+id/toVerificationScanner"
+            app:destination="@id/verificationScannerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shareCredentialsFragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.credentials.ShareCredentialsFragment">
+        <action
+            android:id="@+id/toPresentQRCode"
+            app:destination="@id/presentQRCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verificationScannerFragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.verifier.VerificationScannerFragment">
+        <action
+            android:id="@+id/toVerificationResult"
+            app:destination="@id/verificationResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verificationResultFragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.verifier.VerificationResultFragment" />
+    <fragment
+        android:id="@+id/presentQRCodeFragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.credentials.PresentQRCodeFragment" />
+</navigation>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/pin_code_heading"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:paddingBottom="50dp"
+            android:text="@string/auth_pin_code_heading"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            tools:layout_editor_absoluteY="318dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/authenticate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:insetTop="16dp"
+            android:onClick="@{() -> viewModel.logIn()}"
+            android:text="@string/auth_authenticate_button" />
+
+        <TextView
+            android:id="@+id/authentication_failed_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="@string/auth_authentication_failed"
+            android:textColor="?attr/colorError"
+            android:visibility="@{viewModel.error != null ? View.VISIBLE : View.INVISIBLE}" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            app:constraint_referenced_ids="pin_code_heading,pin_code_input,authenticate_button,authentication_failed_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/pin_code_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="@={viewModel.pinCode}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="fi.dvv.digiid.poc.wallet.ui.auth.AuthenticationViewModel" />
+    </data>
+
+</layout>
