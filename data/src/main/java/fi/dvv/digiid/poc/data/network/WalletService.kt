@@ -1,4 +1,4 @@
-package fi.dvv.digiid.poc.data
+package fi.dvv.digiid.poc.data.network
 
 import fi.dvv.digiid.poc.vc.VerifiablePresentation
 import retrofit2.http.POST

@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import fi.dvv.digiid.poc.data.WalletService
+import fi.dvv.digiid.poc.data.network.WalletService
 import fi.dvv.digiid.poc.wallet.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

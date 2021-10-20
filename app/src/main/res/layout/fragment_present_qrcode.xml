@@ -26,7 +26,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:qrcode="@{viewModel.qrCode}"
+            app:qrcode="@{viewModel.exportedCredential.qrCode}"
             tools:srcCompat="@color/black"
             android:contentDescription="@string/wallet_qr_code_accessibility_label" />
     </androidx.constraintlayout.widget.ConstraintLayout>

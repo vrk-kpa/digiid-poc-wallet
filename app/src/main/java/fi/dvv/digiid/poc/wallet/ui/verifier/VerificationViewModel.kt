@@ -3,6 +3,7 @@ package fi.dvv.digiid.poc.wallet.ui.verifier
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fi.dvv.digiid.poc.domain.VerificationService
+import fi.dvv.digiid.poc.domain.model.ExportedCredential
 import fi.dvv.digiid.poc.vc.VerifiableCredential
 import fi.dvv.digiid.poc.vc.credential.BirthDateCredential
 import fi.dvv.digiid.poc.wallet.ui.common.Event
@@ -32,7 +33,7 @@ class VerificationViewModel @Inject constructor(
 
     fun processQRCode(contents: String) {
         viewModelScope.launch {
-            _scannedCredential.postValue(verificationService.decodeCredential(contents))
+            _scannedCredential.postValue(verificationService.decodeCredential(ExportedCredential(contents)))
         }
     }
 }

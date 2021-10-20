@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Digi-ID</string>
-    <string name="auth_pin_code_heading">Kirjaudu Digitaalisen lompakkoon tunnusluvullasi</string>
+    <string name="choose_profile_create_pin_heading">Valitse tunnusluku</string>
+    <string name="choose_profile_create_pin_body">Valitse tunnusluku, jolla kirjaudut sovellukseen</string>
+    <string name="choose_profile_verify_pin_heading">Vahvista tunnusluku</string>
+    <string name="choose_profile_verify_pin_body">Syötä valitsemasi tunnusluku uudelleen</string>
+    <string name="choose_profile_verify_pin_error">Virheellinen tunnusluku</string>
+    <string name="auth_pin_code_heading">Anna tunnusluku</string>
+    <string name="auth_pin_code_body">Kirjaudu Digitaaliseen lompakkoosi</string>
     <string name="auth_authenticate_button">Kirjaudu</string>
     <string name="auth_authentication_failed">Kirjautuminen epäonnistui</string>
     <string name="button_cancel">Peruuta</string>
@@ -10,4 +16,5 @@
     <string name="wallet_share_birthdate_button">Todistan ikäni</string>
     <string name="wallet_verify_birthdate_button">Haluan tarkistaa iän</string>
     <string name="wallet_qr_code_accessibility_label">QR-koodi</string>
+    <string name="choose_profile_heading">Valitse testihenkilö</string>
 </resources>

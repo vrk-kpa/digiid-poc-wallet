@@ -1,6 +1,8 @@
-package fi.dvv.digiid.poc.data
+package fi.dvv.digiid.poc.data.repositories
 
 import com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper
+import fi.dvv.digiid.poc.data.network.WalletService
+import fi.dvv.digiid.poc.domain.model.ExportedCredential
 import fi.dvv.digiid.poc.domain.repository.CredentialsRepository
 import fi.dvv.digiid.poc.vc.Credential
 import fi.dvv.digiid.poc.vc.VerifiablePresentation
@@ -15,6 +17,10 @@ class CredentialsRepositoryImpl(
 
     override val coreIdentity = MutableStateFlow<VerifiablePresentation?>(null)
 
+    override suspend fun useCredentials(presentation: VerifiablePresentation, pinCode: String) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun authorize(pinCode: String) {
         coreIdentity.value = walletService.getCoreID(pinCode)
     }
@@ -23,6 +29,6 @@ class CredentialsRepositoryImpl(
         val credential = coreIdentity.value?.verifiableCredentials?.firstOrNull { it.credentialSubject::class == type }
         val data = mapper.writeValueAsBytes(credential)
         val base45 = Base45.getEncoder().encodeToString(data)
-        "vcfi:$base45"
+        ExportedCredential("vcfi:$base45")
     }.getOrNull()
 }

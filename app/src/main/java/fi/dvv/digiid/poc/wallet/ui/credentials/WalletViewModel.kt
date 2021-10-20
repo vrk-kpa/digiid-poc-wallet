@@ -39,7 +39,7 @@ class WalletViewModel @Inject constructor(
         }?.birthDate?.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
     }
 
-    val qrCode = presentation.map { presentation ->
+    val exportedCredential = presentation.map { presentation ->
         if (presentation == null) return@map null
         credentialsRepository.exportCredential(BirthDateCredential::class)
     }

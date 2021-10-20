@@ -12,35 +12,41 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingTop="30dp"
-            android:paddingBottom="50dp"
-            android:text="@string/auth_pin_code_heading"
+            android:paddingBottom="20dp"
             android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceHeadline6"
-            tools:layout_editor_absoluteY="318dp" />
+            tools:text="@string/auth_pin_code_heading" />
+
+        <TextView
+            android:id="@+id/pin_code_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="50dp"
+            tools:text="@string/auth_pin_code_body" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/authenticate_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:insetTop="16dp"
-            android:onClick="@{() -> viewModel.logIn()}"
+            android:onClick="@{() -> delegate.submit()}"
             android:text="@string/auth_authenticate_button" />
 
         <TextView
-            android:id="@+id/authentication_failed_label"
+            android:id="@+id/verify_failed_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:text="@string/auth_authentication_failed"
+            android:text="@{delegate.error != null ? context.getString(delegate.error) : null}"
             android:textColor="?attr/colorError"
-            android:visibility="@{viewModel.error != null ? View.VISIBLE : View.INVISIBLE}" />
+            android:visibility="@{delegate.error != null ? View.VISIBLE : View.INVISIBLE}" />
 
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:orientation="vertical"
-            app:constraint_referenced_ids="pin_code_heading,pin_code_input,authenticate_button,authentication_failed_label"
+            app:constraint_referenced_ids="pin_code_heading,pin_code_body,pin_code_input,authenticate_button,verify_failed_label"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:text="@={viewModel.pinCode}" />
+                android:text="@={delegate.pinCode}" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -66,8 +72,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewModel"
-            type="fi.dvv.digiid.poc.wallet.ui.auth.AuthenticationViewModel" />
+            name="delegate"
+            type="fi.dvv.digiid.poc.wallet.ui.auth.PINCodeEntryDelegate" />
     </data>
 
 </layout>
