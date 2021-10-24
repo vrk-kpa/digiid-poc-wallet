@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import okhttp3.tls.HeldCertificate
 
 interface ClientCertificateProvider {
-    val clientCertificate: Flow<HeldCertificate?>
+    val clientCertificate: HeldCertificate?
 }
 
 interface ProfileRepository : ClientCertificateProvider {

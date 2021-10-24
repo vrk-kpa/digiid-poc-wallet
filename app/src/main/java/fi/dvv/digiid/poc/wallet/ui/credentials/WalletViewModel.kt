@@ -9,6 +9,8 @@ import fi.dvv.digiid.poc.domain.repository.CredentialsRepository
 import fi.dvv.digiid.poc.vc.credential.BirthDateCredential
 import fi.dvv.digiid.poc.vc.credential.FamilyNameCredential
 import fi.dvv.digiid.poc.vc.credential.GivenNameCredential
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import javax.inject.Inject
@@ -42,5 +44,15 @@ class WalletViewModel @Inject constructor(
     val exportedCredential = presentation.map { presentation ->
         if (presentation == null) return@map null
         credentialsRepository.exportCredential(BirthDateCredential::class)
+    }
+
+    init {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                credentialsRepository.loadCoreIdentity()
+            }.onFailure {
+                Timber.e("Unable to load the core identity")
+            }
+        }
     }
 }

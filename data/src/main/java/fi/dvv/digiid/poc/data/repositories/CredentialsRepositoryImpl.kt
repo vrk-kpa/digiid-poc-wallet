@@ -8,21 +8,18 @@ import fi.dvv.digiid.poc.vc.Credential
 import fi.dvv.digiid.poc.vc.VerifiablePresentation
 import kotlinx.coroutines.flow.MutableStateFlow
 import nl.minvws.encoding.Base45
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
-class CredentialsRepositoryImpl(
+class CredentialsRepositoryImpl @Inject constructor(
     private val walletService: WalletService
 ) : CredentialsRepository {
     private val mapper = CBORMapper().findAndRegisterModules()
 
     override val coreIdentity = MutableStateFlow<VerifiablePresentation?>(null)
 
-    override suspend fun useCredentials(presentation: VerifiablePresentation, pinCode: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun authorize(pinCode: String) {
-        coreIdentity.value = walletService.getCoreID(pinCode)
+    override suspend fun loadCoreIdentity() {
+        coreIdentity.value = walletService.getCoreID()
     }
 
     override fun <T : Credential> exportCredential(type: KClass<T>) = kotlin.runCatching {

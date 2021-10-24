@@ -8,13 +8,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import fi.dvv.digiid.poc.data.di.DefaultDispatcher
 import fi.dvv.digiid.poc.data.di.IODispatcher
-import fi.dvv.digiid.poc.data.network.WalletService
-import fi.dvv.digiid.poc.data.repositories.CredentialsRepositoryImpl
 import fi.dvv.digiid.poc.data.services.VerificationServiceImpl
 import fi.dvv.digiid.poc.data.storage.EncryptedSharedPreferencesStorage
 import fi.dvv.digiid.poc.domain.EncryptedStorageManager
 import fi.dvv.digiid.poc.domain.VerificationService
-import fi.dvv.digiid.poc.domain.repository.CredentialsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
@@ -31,12 +28,6 @@ object AppModule {
     @Provides
     @IODispatcher
     fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
-
-    @Singleton
-    @Provides
-    fun provideCredentialsRepository(walletService: WalletService): CredentialsRepository {
-        return CredentialsRepositoryImpl(walletService)
-    }
 
     @Singleton
     @Provides

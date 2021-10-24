@@ -22,7 +22,16 @@ android {
 
         val properties = Properties()
         properties.load(FileInputStream("local.properties"))
-        buildConfigField("String", "WALLET_BASE_URL", "\"${properties.getProperty("walletBaseUrl")}\"")
+
+        buildConfigField(
+            "String",
+            "WALLET_BASE_URL",
+            "\"${properties.getProperty("walletBaseUrl")}\""
+        )
+
+        buildConfigField("String", "WALLET_CERTIFICATE_PEM",
+            properties.getProperty("walletCertificatePEM").lines()
+                .joinToString(" +\n") { "\"$it\\n\"" })
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -81,9 +90,9 @@ dependencies {
 
     implementation("com.google.zxing:core:3.3.0")
 
-    implementation("androidx.camera:camera-camera2:1.1.0-alpha09")
-    implementation("androidx.camera:camera-lifecycle:1.1.0-alpha09")
-    implementation("androidx.camera:camera-view:1.0.0-alpha29")
+    implementation("androidx.camera:camera-camera2:1.1.0-alpha10")
+    implementation("androidx.camera:camera-lifecycle:1.1.0-alpha10")
+    implementation("androidx.camera:camera-view:1.0.0-alpha30")
 
     implementation("com.jakewharton.timber:timber:${Versions.timberVersion}")
 

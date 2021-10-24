@@ -9,17 +9,18 @@ import fi.dvv.digiid.poc.domain.model.UserProfile
 import fi.dvv.digiid.poc.domain.repository.ProfileRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.tls.HeldCertificate
+import java.util.*
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
     @IODispatcher private val ioDispatcher: CoroutineDispatcher,
     private val encryptedStorage: EncryptedStorageManager,
+    testProfiles: Optional<List<UserProfile>>
 ) : ProfileRepository {
-    override val availableProfiles = listOf(UserProfile.TEST_USER_1, UserProfile.TEST_USER_2)
+    override val availableProfiles: List<UserProfile> = testProfiles.orElse(emptyList())
 
     private val objectMapper = ObjectMapper().registerKotlinModule()
 
@@ -63,10 +64,11 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override val clientCertificate = authState.map {
-        if (it is AuthState.Unlocked) HeldCertificate.decode(it.profile.certificatePEM)
-        else null
-    }
+    override val clientCertificate: HeldCertificate?
+        get() = when (val authState = authState.value) {
+            is AuthState.Unlocked -> HeldCertificate.decode(authState.profile.certificatePEM)
+            else -> null
+        }
 
     companion object {
         const val KEY_PIN_CODE = "user_pin_code"

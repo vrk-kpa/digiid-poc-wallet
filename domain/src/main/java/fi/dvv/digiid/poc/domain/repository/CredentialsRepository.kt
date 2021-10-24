@@ -9,8 +9,7 @@ import kotlin.reflect.KClass
 interface CredentialsRepository {
     val coreIdentity: StateFlow<VerifiablePresentation?>
 
-    suspend fun authorize(pinCode: String)
-    suspend fun useCredentials(presentation: VerifiablePresentation, pinCode: String)
+    suspend fun loadCoreIdentity()
 
     fun<T: Credential> exportCredential(type: KClass<T>): ExportedCredential?
 }
