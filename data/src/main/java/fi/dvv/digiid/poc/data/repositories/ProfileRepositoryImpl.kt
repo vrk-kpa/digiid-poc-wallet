@@ -64,6 +64,14 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun logout() {
+        withContext(ioDispatcher) {
+            encryptedStorage[KEY_PIN_CODE] = null
+            encryptedStorage[KEY_USER_PROFILE] = null
+            authState.emit(AuthState.Unauthenticated)
+        }
+    }
+
     override val clientCertificate: HeldCertificate?
         get() = when (val authState = authState.value) {
             is AuthState.Unlocked -> HeldCertificate.decode(authState.profile.certificatePEM)

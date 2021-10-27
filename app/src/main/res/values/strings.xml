@@ -20,4 +20,5 @@
     <string name="choose_profile_heading">Valitse testihenkilö</string>
     <string name="credential_type_age">Ikätieto</string>
     <string name="credential_value_age">Yli %1$d vuotta</string>
+    <string name="main_menu_logout">Kirjaudu ulos</string>
 </resources>

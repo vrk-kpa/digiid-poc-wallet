@@ -16,4 +16,5 @@ interface ProfileRepository : ClientCertificateProvider {
 
     suspend fun unlock(pinCode: String)
     suspend fun setProfile(profile: UserProfile, pinCode: String)
+    suspend fun logout()
 }
