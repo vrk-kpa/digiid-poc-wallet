@@ -9,6 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
+import fi.dvv.digiid.poc.vc.credential.AgeOver18Credential
+import fi.dvv.digiid.poc.vc.credential.AgeOver20Credential
 import fi.dvv.digiid.poc.wallet.databinding.FragmentWalletBinding
 
 @AndroidEntryPoint
@@ -27,7 +29,13 @@ class WalletFragment : Fragment() {
 
         binding.toolbar.setupWithNavController(findNavController())
 
-        binding.shareCredentialButton.setOnClickListener {
+        binding.shareCredentialAge18Button.setOnClickListener {
+            viewModel.exportCredential(AgeOver18Credential::class)
+            findNavController().navigate(WalletFragmentDirections.toShareCredentials())
+        }
+
+        binding.shareCredentialAge20Button.setOnClickListener {
+            viewModel.exportCredential(AgeOver20Credential::class)
             findNavController().navigate(WalletFragmentDirections.toShareCredentials())
         }
 
