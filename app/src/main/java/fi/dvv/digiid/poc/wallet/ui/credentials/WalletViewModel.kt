@@ -51,7 +51,7 @@ class WalletViewModel @Inject constructor(
             kotlin.runCatching {
                 credentialsRepository.loadCoreIdentity()
             }.onFailure {
-                Timber.e("Unable to load the core identity")
+                Timber.e("Unable to load the core identity: $it")
             }
         }
     }
