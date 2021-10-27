@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import fi.dvv.digiid.poc.wallet.databinding.FragmentShareCredentialsBinding
 
@@ -23,6 +24,7 @@ class ShareCredentialsFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.toolbar.setupWithNavController(findNavController())
 
         binding.cancelButton.setOnClickListener {
             findNavController().popBackStack()

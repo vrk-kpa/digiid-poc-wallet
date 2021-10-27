@@ -11,10 +11,14 @@
     <string name="auth_authentication_failed">Kirjautuminen epäonnistui</string>
     <string name="button_cancel">Peruuta</string>
     <string name="button_accept">Hyväksy</string>
+    <string name="wallet_share_title">Luo todistus</string>
     <string name="wallet_share_heading">Sinusta välitetään seuraavat tiedot tarkastajalle:</string>
-    <string name="wallet_birthdate_label">Syntymäaika</string>
-    <string name="wallet_share_birthdate_button">Todistan ikäni</string>
+    <string name="wallet_share_credential_age18_button">Todistan ikäni: Yli 18v</string>
+    <string name="wallet_share_credential_age20_button">Todistan ikäni: Yli 20v</string>
     <string name="wallet_verify_birthdate_button">Haluan tarkistaa iän</string>
     <string name="wallet_qr_code_accessibility_label">QR-koodi</string>
     <string name="choose_profile_heading">Valitse testihenkilö</string>
+    <string name="credential_type_age">Ikätieto</string>
+    <string name="credential_value_age">Yli %1$d vuotta</string>
+    <string name="main_menu_logout">Kirjaudu ulos</string>
 </resources>

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
     app:startDestination="@id/walletFragment">
 
     <fragment
         android:id="@+id/walletFragment"
         android:name="fi.dvv.digiid.poc.wallet.ui.credentials.WalletFragment"
-        android:label="WalletFragment" >
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_wallet">
         <action
             android:id="@+id/toShareCredentials"
             app:destination="@id/shareCredentialsFragment" />
@@ -17,22 +19,27 @@
     </fragment>
     <fragment
         android:id="@+id/shareCredentialsFragment"
-        android:name="fi.dvv.digiid.poc.wallet.ui.credentials.ShareCredentialsFragment">
+        android:name="fi.dvv.digiid.poc.wallet.ui.credentials.ShareCredentialsFragment"
+        android:label="@string/wallet_share_title"
+        tools:layout="@layout/fragment_share_credentials">
         <action
             android:id="@+id/toPresentQRCode"
             app:destination="@id/presentQRCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/verificationScannerFragment"
-        android:name="fi.dvv.digiid.poc.wallet.ui.verifier.VerificationScannerFragment">
+        android:name="fi.dvv.digiid.poc.wallet.ui.verifier.VerificationScannerFragment"
+        tools:layout="@layout/fragment_verification_scanner">
         <action
             android:id="@+id/toVerificationResult"
             app:destination="@id/verificationResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/verificationResultFragment"
-        android:name="fi.dvv.digiid.poc.wallet.ui.verifier.VerificationResultFragment" />
+        android:name="fi.dvv.digiid.poc.wallet.ui.verifier.VerificationResultFragment"
+        tools:layout="@layout/fragment_verification_result" />
     <fragment
         android:id="@+id/presentQRCodeFragment"
-        android:name="fi.dvv.digiid.poc.wallet.ui.credentials.PresentQRCodeFragment" />
+        android:name="fi.dvv.digiid.poc.wallet.ui.credentials.PresentQRCodeFragment"
+        tools:layout="@layout/fragment_present_qrcode" />
 </navigation>

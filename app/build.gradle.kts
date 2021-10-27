@@ -75,7 +75,7 @@ dependencies {
 }
 
 dependencies {
-    val lifecycleVersion = "2.4.0-beta01"
+    val lifecycleVersion = "2.4.0"
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -88,7 +88,7 @@ dependencies {
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.1")
 
-    implementation("com.google.zxing:core:3.3.0")
+    implementation("com.google.zxing:core:3.4.1")
 
     implementation("androidx.camera:camera-camera2:1.1.0-alpha10")
     implementation("androidx.camera:camera-lifecycle:1.1.0-alpha10")

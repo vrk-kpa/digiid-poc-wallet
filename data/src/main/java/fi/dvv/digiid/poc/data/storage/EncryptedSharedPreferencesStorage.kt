@@ -24,9 +24,11 @@ class EncryptedSharedPreferencesStorage(context: Context) : EncryptedStorageMana
         return sharedPreferences.getString(key, null)
     }
 
-    override fun set(key: String, value: String) {
+    override fun set(key: String, value: String?) {
         with (sharedPreferences.edit()) {
-            putString(key, value)
+            value?.let {
+                putString(key, it)
+            } ?: remove(key)
             apply()
         }
     }

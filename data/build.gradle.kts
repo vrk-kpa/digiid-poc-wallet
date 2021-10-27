@@ -42,8 +42,10 @@ dependencies {
     implementation("com.jakewharton.timber:timber:${Versions.timberVersion}")
 
     implementation("io.github.ehn-digital-green-development:base45:0.0.3")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.12.5")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5")
+
+    val jacksonVersion = "2.13.0"
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
     implementation("androidx.security:security-crypto:1.0.0")
 
