@@ -5,4 +5,5 @@ import fi.dvv.digiid.poc.vc.VerifiableCredential
 
 interface VerificationService {
     suspend fun decodeCredential(credential: ExportedCredential): VerifiableCredential?
+    suspend fun verify(credential: VerifiableCredential): Boolean
 }

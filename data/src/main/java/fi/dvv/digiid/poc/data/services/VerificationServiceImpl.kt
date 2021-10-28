@@ -5,6 +5,7 @@ import fi.dvv.digiid.poc.domain.VerificationService
 import fi.dvv.digiid.poc.domain.model.ExportedCredential
 import fi.dvv.digiid.poc.vc.VerifiableCredential
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import nl.minvws.encoding.Base45
 
@@ -19,5 +20,10 @@ class VerificationServiceImpl(private val ioDispatcher: CoroutineDispatcher): Ve
             val data = Base45.getDecoder().decode(credential.qrCode.drop(5))
             mapper.readValue(data, VerifiableCredential::class.java)
         }
+    }
+
+    override suspend fun verify(credential: VerifiableCredential): Boolean {
+        delay(1500)
+        return true
     }
 }

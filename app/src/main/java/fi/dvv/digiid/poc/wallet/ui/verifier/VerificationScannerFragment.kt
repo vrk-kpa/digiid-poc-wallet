@@ -16,11 +16,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import fi.dvv.digiid.poc.wallet.databinding.FragmentVerificationScannerBinding
-import fi.dvv.digiid.poc.wallet.ui.common.observeEvent
+import fi.dvv.digiid.poc.wallet.ui.common.launchAndRepeatWithViewLifecycle
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class VerificationScannerFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
@@ -45,11 +49,15 @@ class VerificationScannerFragment : Fragment() {
         cameraExecutor = Executors.newSingleThreadExecutor()
         cameraPermissionRequest.launch(Manifest.permission.CAMERA)
 
-        viewModel.credentialScannedEvent.observeEvent(viewLifecycleOwner) {
-            findNavController().navigate(VerificationScannerFragmentDirections.toVerificationResult())
-        }
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        launchAndRepeatWithViewLifecycle {
+            viewModel.credentialScannedEvent.collect {
+                findNavController().navigate(VerificationScannerFragmentDirections.toVerificationResult())
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -71,7 +79,7 @@ class VerificationScannerFragment : Fragment() {
                 .build()
 
             qrAnalyzer.setAnalyzer(cameraExecutor, ZxingQrCodeAnalyzer {
-                viewModel.processQRCode(it)
+                runBlocking { viewModel.processQRCode(it) }
             })
 
             try {

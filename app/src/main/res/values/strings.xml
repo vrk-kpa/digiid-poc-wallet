@@ -24,4 +24,5 @@
     <string name="verify_credential_age_over">Yli %1$dv</string>
     <string name="verify_credential_age_under">Alle %1$dv</string>
     <string name="verify_credential_other">Muu todistus</string>
+    <string name="verify_credential_invalid">Todistuksen allekirjoitus on virheellinen</string>
 </resources>

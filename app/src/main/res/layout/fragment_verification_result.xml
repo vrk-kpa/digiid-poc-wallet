@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="fi.dvv.digiid.poc.wallet.ui.verifier.VerificationStatus" />
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="fi.dvv.digiid.poc.wallet.ui.verifier.VerificationViewModel" />
@@ -57,11 +60,36 @@
                     tools:drawableEnd="@drawable/ic_success"
                     tools:text="Yli 18v" />
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:text="@string/verify_credential_invalid"
+                    android:textAlignment="center"
+                    android:textColor="@color/red"
+                    android:visibility="@{viewModel.credentialValid instanceof VerificationStatus.Invalid ? View.VISIBLE : View.GONE}"
+                    app:drawableTopCompat="@drawable/ic_failure"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <androidx.constraintlayout.helper.widget.Flow
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:visibility="@{viewModel.credentialValid instanceof VerificationStatus.Valid ? View.VISIBLE : View.GONE}"
                     app:constraint_referenced_ids="credential_icon,credential_value"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:visibility="@{viewModel.credentialValid instanceof VerificationStatus.Loading ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

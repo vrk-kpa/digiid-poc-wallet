@@ -8,7 +8,9 @@ import fi.dvv.digiid.poc.vc.credential.AgeOver20Credential
 import fi.dvv.digiid.poc.wallet.R
 
 @BindingAdapter("credentialSubject")
-fun TextView.bindCredentialSubjectValue(credential: Credential) {
+fun TextView.bindCredentialSubjectValue(credential: Credential?) {
+    if (credential == null) return
+
     when (credential) {
         is AgeOver18Credential -> renderAgeCredential(18, credential.isAgeOver18)
         is AgeOver20Credential -> renderAgeCredential(20, credential.isAgeOver20)
