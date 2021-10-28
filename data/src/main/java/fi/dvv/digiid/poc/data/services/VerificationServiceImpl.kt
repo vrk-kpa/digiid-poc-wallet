@@ -23,9 +23,12 @@ import javax.inject.Inject
 class VerificationServiceImpl @Inject constructor(
     @IODispatcher private val ioDispatcher: CoroutineDispatcher,
     private val walletService: WalletService,
-): VerificationService {
+) : VerificationService {
     private val cborMapper = CBORMapper().findAndRegisterModules()
-    private val jsonMapper = JsonMapper().findAndRegisterModules().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+
+    private val jsonMapper = JsonMapper()
+        .findAndRegisterModules()
+        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
 
     override suspend fun decodeCredential(credential: ExportedCredential): VerifiableCredential? {
         if (!credential.qrCode.startsWith("vcfi:", true)) return null
@@ -37,22 +40,22 @@ class VerificationServiceImpl @Inject constructor(
         }
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun verify(credential: VerifiableCredential) = coroutineScope {
+    override suspend fun verify(credential: VerifiableCredential) =
         kotlin.runCatching {
-            val issuerPEM = async {
-                walletService.getVerificationMethod(credential.proof.verificationMethod.toString())
-            }
+            coroutineScope {
+                val issuerPEM = async {
+                    walletService.getVerificationMethod(credential.proof.verificationMethod.toString())
+                }
 
-            withContext(ioDispatcher) {
-                val signature = credential.proof.jws
-                credential.proof.jws = null
-                val payload = jsonMapper.writeValueAsString(credential)
-                val jwk = JWK.parseFromPEMEncodedObjects(issuerPEM.await())
-                val verifier = ECDSAVerifier(jwk.toECKey())
-                val header = JWSHeader.Builder(JWSAlgorithm.ES256).build()
-                verifier.verify(header, payload.toByteArray(), Base64URL(signature))
+                withContext(ioDispatcher) {
+                    val signature = credential.proof.jws
+                    credential.proof.jws = null
+                    val payload = jsonMapper.writeValueAsString(credential)
+                    val jwk = JWK.parseFromPEMEncodedObjects(issuerPEM.await())
+                    val verifier = ECDSAVerifier(jwk.toECKey())
+                    val header = JWSHeader.Builder(JWSAlgorithm.ES256).build()
+                    verifier.verify(header, payload.toByteArray(), Base64URL(signature))
+                }
             }
         }.getOrNull() ?: false
-    }
 }
