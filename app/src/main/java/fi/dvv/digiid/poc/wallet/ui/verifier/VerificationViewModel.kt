@@ -5,11 +5,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import fi.dvv.digiid.poc.domain.VerificationService
 import fi.dvv.digiid.poc.domain.model.ExportedCredential
 import fi.dvv.digiid.poc.vc.VerifiableCredential
-import fi.dvv.digiid.poc.vc.credential.BirthDateCredential
 import fi.dvv.digiid.poc.wallet.ui.common.Event
 import kotlinx.coroutines.launch
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,11 +21,8 @@ class VerificationViewModel @Inject constructor(
         }
     }
 
-    val credentialValue = _scannedCredential.map {
-        when (val subject = it?.credentialSubject) {
-            is BirthDateCredential -> subject.birthDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
-            else -> ""
-        }
+    val credentialSubject = _scannedCredential.map {
+        it?.credentialSubject
     }
 
     fun processQRCode(contents: String) {

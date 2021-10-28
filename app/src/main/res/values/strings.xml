@@ -21,4 +21,7 @@
     <string name="credential_type_age">Ikätieto</string>
     <string name="credential_value_age">Yli %1$d vuotta</string>
     <string name="main_menu_logout">Kirjaudu ulos</string>
+    <string name="verify_credential_age_over">Yli %1$dv</string>
+    <string name="verify_credential_age_under">Alle %1$dv</string>
+    <string name="verify_credential_other">Muu todistus</string>
 </resources>
