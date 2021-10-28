@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface RepositoryModule {
+interface ProfileModule {
     @Binds
     @Singleton
     fun bindProfileRepository(profileRepositoryImpl: ProfileRepositoryImpl): ProfileRepository
