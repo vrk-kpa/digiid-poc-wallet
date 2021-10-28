@@ -1,39 +1,46 @@
 package fi.dvv.digiid.poc.wallet.ui.verifier
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fi.dvv.digiid.poc.domain.VerificationService
 import fi.dvv.digiid.poc.domain.model.ExportedCredential
 import fi.dvv.digiid.poc.vc.VerifiableCredential
-import fi.dvv.digiid.poc.vc.credential.BirthDateCredential
-import fi.dvv.digiid.poc.wallet.ui.common.Event
-import kotlinx.coroutines.launch
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class VerificationViewModel @Inject constructor(
     private val verificationService: VerificationService
-): ViewModel() {
-    private val _scannedCredential = MutableLiveData<VerifiableCredential?>(null)
+) : ViewModel() {
+    private val _decodedCredential = MutableStateFlow<VerifiableCredential?>(null)
+    val decodedCredential = _decodedCredential.filterNotNull()
 
-    val credentialScannedEvent = _scannedCredential.switchMap {
-        liveData {
-            it?.let { emit(Event(it)) }
+    val credentialValid = decodedCredential
+        .transformLatest {
+            emit(VerificationStatus.Loading)
+            emit(
+                when (verificationService.verify(it)) {
+                    true -> VerificationStatus.Valid(it.credentialSubject)
+                    else -> VerificationStatus.Invalid
+                }
+            )
         }
+        .stateIn(viewModelScope, SharingStarted.Lazily, VerificationStatus.Loading)
+
+    val credentialSubject = credentialValid
+        .filterIsInstance<VerificationStatus.Valid>()
+        .map { it.credential }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+
+    fun reset() {
+        _decodedCredential.value = null
     }
 
-    val credentialValue = _scannedCredential.map {
-        when (val subject = it?.credentialSubject) {
-            is BirthDateCredential -> subject.birthDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
-            else -> ""
-        }
-    }
-
-    fun processQRCode(contents: String) {
-        viewModelScope.launch {
-            _scannedCredential.postValue(verificationService.decodeCredential(ExportedCredential(contents)))
-        }
+    suspend fun processQRCode(qrCode: String) {
+        if (_decodedCredential.value != null) return
+        _decodedCredential.value = verificationService.decodeCredential(ExportedCredential(qrCode))
     }
 }

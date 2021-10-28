@@ -17,6 +17,7 @@ import okhttp3.tls.HandshakeCertificates
 import okhttp3.tls.decodeCertificatePem
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 /**
  * Credentials module
@@ -31,7 +32,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
  */
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-interface CredentialsModule {
+interface CredentialModule {
     @Binds
     @ActivityRetainedScoped
     fun bindCredentialsRepository(credentialsRepositoryImpl: CredentialsRepositoryImpl): CredentialsRepository
@@ -51,6 +52,7 @@ interface CredentialsModule {
 
             val retrofit = Retrofit.Builder().baseUrl(BuildConfig.WALLET_BASE_URL)
                 .client(okHttpClient)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create(ObjectMapper().findAndRegisterModules()))
                 .build()
 

@@ -47,11 +47,21 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
+    implementation("com.nimbusds:nimbus-jose-jwt:9.15.2")
+
+    val bouncyCastleVersion = "1.69"
+    implementation("org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion")
+    implementation("org.bouncycastle:bcpkix-jdk15on:$bouncyCastleVersion")
+    implementation("org.bouncycastle:bcutil-jdk15on:$bouncyCastleVersion")
+
     implementation("androidx.security:security-crypto:1.0.0")
 
     api("com.squareup.okhttp3:okhttp:4.9.1")
-    api("com.squareup.retrofit2:retrofit:2.9.0")
-    api("com.squareup.retrofit2:converter-jackson:2.9.0")
+
+    val retrofitVersion = "2.9.0"
+    api("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    api("com.squareup.retrofit2:converter-jackson:$retrofitVersion")
+    api("com.squareup.retrofit2:converter-scalars:$retrofitVersion")
 
     testImplementation("junit:junit:${Versions.junitVersion}")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
