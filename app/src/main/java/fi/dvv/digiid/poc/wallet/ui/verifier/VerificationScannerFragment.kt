@@ -53,8 +53,10 @@ class VerificationScannerFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.reset()
+
         launchAndRepeatWithViewLifecycle {
-            viewModel.credentialScannedEvent.collect {
+            viewModel.decodedCredential.collect {
                 findNavController().navigate(VerificationScannerFragmentDirections.toVerificationResult())
             }
         }
