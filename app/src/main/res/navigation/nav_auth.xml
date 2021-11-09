@@ -3,52 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_auth"
-    app:startDestination="@id/choose_profile_fragment">
-
-        <fragment
-            android:id="@+id/choose_profile_fragment"
-            android:name="fi.dvv.digiid.poc.wallet.ui.auth.ChooseProfileFragment"
-            android:label="ChooseRoleFragment"
-            tools:layout="@layout/fragment_choose_profile">
-            <action
-                android:id="@+id/toPINCodeEntry"
-                app:destination="@id/create_pin_fragment" />
-        </fragment>
-        <fragment
-            android:id="@+id/create_pin_fragment"
-            android:name="fi.dvv.digiid.poc.wallet.ui.auth.CreatePINCodeFragment"
-            android:label="CreatePINCodeFragment"
-            tools:layout="@layout/fragment_pin_code">
-            <action
-                android:id="@+id/toVerifyPINCode"
-                app:destination="@id/verify_pin_fragment" />
-        </fragment>
-
-        <fragment android:id="@+id/verify_pin_fragment"
-            android:name="fi.dvv.digiid.poc.wallet.ui.auth.VerifyPINCodeFragment"
-            android:label="VerifyPINCodeFragment"
-            tools:layout="@layout/fragment_pin_code">
-
-            <action
-                android:id="@+id/toMainActivity"
-                app:destination="@id/mainActivity" />
-            <argument
-                android:name="pinCode"
-                app:argType="string" />
-        </fragment>
-
-    <fragment
-        android:id="@+id/unlock_app_fragment"
-        android:name="fi.dvv.digiid.poc.wallet.ui.auth.UnlockAppFragment"
-        android:label="UnlockFragment" >
-        <action
-            android:id="@+id/action_unlockFragment_to_mainActivity"
-            app:destination="@id/mainActivity" />
-    </fragment>
+    app:startDestination="@id/create_profile_fragment">
 
     <activity
         android:id="@+id/mainActivity"
         android:name="fi.dvv.digiid.poc.wallet.ui.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
+    <fragment
+        android:id="@+id/create_pin_fragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.auth.CreatePINCodeFragment"
+        android:label="CreatePINCodeFragment"
+        tools:layout="@layout/fragment_pin_code">
+        <action
+            android:id="@+id/toVerifyPINCode"
+            app:destination="@id/verify_pin_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/verify_pin_fragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.auth.VerifyPINCodeFragment"
+        android:label="VerifyPINCodeFragment"
+        tools:layout="@layout/fragment_pin_code">
+
+        <action
+            android:id="@+id/toMainActivity"
+            app:destination="@id/mainActivity" />
+        <argument
+            android:name="pinCode"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/unlock_app_fragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.auth.UnlockAppFragment"
+        android:label="UnlockFragment"
+        tools:layout="@layout/fragment_pin_code">
+        <action
+            android:id="@+id/action_unlockFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/choose_profile_fragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.auth.ChooseProfileFragment"
+        android:label="ChooseRoleFragment"
+        tools:layout="@layout/fragment_choose_profile">
+        <action
+            android:id="@+id/toPINCodeEntry"
+            app:destination="@id/create_pin_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/create_profile_fragment"
+        android:name="fi.dvv.digiid.poc.wallet.ui.auth.CreateProfileFragment"
+        tools:layout="@layout/fragment_create_profile">
+
+        <action
+            android:id="@+id/action_createProfileFragment_to_create_pin_fragment"
+            app:destination="@id/create_pin_fragment" />
+    </fragment>
 </navigation>
