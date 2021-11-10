@@ -21,4 +21,5 @@ interface ProfileRepository : ClientCertificateProvider {
     suspend fun logout()
 
     fun createSigningRequest(satu: String): String
+    fun importCertificate(pem: String)
 }

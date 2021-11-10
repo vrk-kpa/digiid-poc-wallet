@@ -19,13 +19,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/key_pair_label"
+            <Button
+                android:id="@+id/save_certificate_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="Avaimen tyyppi:"
-                android:textAppearance="?attr/textAppearanceCaption" />
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:enabled="@{viewModel.certificateValid}"
+                android:onClick="@{() -> viewModel.importCertificate()}"
+                android:text="@string/create_profile_save_certificate"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/csr_input"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/key_pair_value"
@@ -41,20 +49,17 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@{viewModel.keyInfo.secure ? @drawable/ic_success : @drawable/ic_failure}"
                 android:gravity="center_vertical"
-                android:text="Tallennettu turvallisesti"
-                android:textAppearance="?attr/textAppearanceCaption" />
+                android:text="@string/create_profile_key_status"
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:ignore="UseCompatTextViewDrawableXml" />
 
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flow_key_info"
+            <TextView
+                android:id="@+id/key_pair_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="10dp"
-                app:constraint_referenced_ids="key_pair_label,key_pair_value,key_security_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:gravity="center_vertical"
+                android:text="@string/create_profile_key_type"
+                android:textAppearance="?attr/textAppearanceCaption" />
 
             <androidx.constraintlayout.helper.widget.Flow
                 android:id="@+id/flow_create_csr"
@@ -69,28 +74,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/flow_key_info" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/satu_input"
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow_key_info"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="SATU"
-                tools:layout_editor_absoluteX="10dp"
-                tools:layout_editor_absoluteY="40dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                app:constraint_referenced_ids="key_pair_label,key_pair_value,key_security_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/create_csr_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Luo CSR" />
-
+                android:enabled="@{!viewModel.satu.empty}"
+                android:onClick="@{() -> viewModel.createCSR()}"
+                android:text="@string/create_profile_create_csr" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/csr_input"
@@ -99,17 +101,30 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:hint="@string/create_profile_pem_label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/flow_create_csr"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintTop_toBottomOf="@+id/flow_create_csr">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine|text"
+                    android:text="@={viewModel.pemText}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/satu_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/create_profile_satu_label">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:text="" />
+                    android:text="@={viewModel.satu}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

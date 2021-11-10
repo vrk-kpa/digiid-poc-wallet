@@ -10,10 +10,7 @@ import fi.dvv.digiid.poc.wallet.R
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,6 +34,28 @@ class ChooseProfileViewModel @Inject constructor(
     override val error = MutableStateFlow<Int?>(null)
 
     val keyInfo = profileRepository.keyInfo.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    val pemText = MutableStateFlow<String?>(null)
+
+    val satu = MutableStateFlow("")
+
+    val certificateValid = pemText.map {
+        it?.startsWith("-----BEGIN CERTIFICATE-----\n") == true
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    fun createCSR() {
+        viewModelScope.launch {
+           satu.value.takeIf { it.isNotBlank() }?.let { satu ->
+                pemText.value = profileRepository.createSigningRequest(satu)
+            }
+        }
+    }
+
+    fun importCertificate() {
+        pemText.value?.takeIf { certificateValid.value }?.let {
+            profileRepository.importCertificate(it)
+        }
+    }
 
     fun reset() {
         pinCode.value = ""

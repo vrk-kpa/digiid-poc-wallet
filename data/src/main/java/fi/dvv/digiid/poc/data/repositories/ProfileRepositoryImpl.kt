@@ -17,10 +17,14 @@ import kotlinx.coroutines.withContext
 import okhttp3.tls.HeldCertificate
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
 import org.bouncycastle.asn1.x509.*
+import org.bouncycastle.cert.X509CertificateHolder
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
+import org.bouncycastle.openssl.PEMParser
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder
 import timber.log.Timber
+import java.io.StringReader
 import java.io.StringWriter
 import java.security.KeyFactory
 import java.security.KeyPair
@@ -70,7 +74,12 @@ class ProfileRepositoryImpl @Inject constructor(
                 PRIVATE_KEY_ALIAS,
                 KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
             ).run {
-                setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
+                setDigests(
+                    KeyProperties.DIGEST_SHA256,
+                    KeyProperties.DIGEST_SHA512,
+                    KeyProperties.DIGEST_NONE
+                )
+
                 build()
             }
 
@@ -149,6 +158,25 @@ class ProfileRepositoryImpl @Inject constructor(
             }
 
             writer.toString()
+        }
+    }
+
+    override fun importCertificate(pem: String) {
+        val converter = JcaX509CertificateConverter()
+
+        kotlin.runCatching {
+            StringReader(pem).use { reader ->
+                (PEMParser(reader).readObject() as? X509CertificateHolder)?.let {
+                    converter.getCertificate(it)
+                }
+            }
+        }.getOrNull()?.let { certificate ->
+            KeyStore.getInstance("AndroidKeyStore")?.apply {
+                load(null)
+                setKeyEntry(PRIVATE_KEY_ALIAS, keyPair.value.private, charArrayOf(), arrayOf(certificate))
+            }
+
+            authState.value = AuthState.Unlocked(UserProfile("", pem))
         }
     }
 
