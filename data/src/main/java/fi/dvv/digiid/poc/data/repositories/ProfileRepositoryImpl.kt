@@ -1,11 +1,12 @@
 package fi.dvv.digiid.poc.data.repositories
 
+import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
+import android.security.keystore.KeyProperties.*
 import fi.dvv.digiid.poc.data.di.IODispatcher
 import fi.dvv.digiid.poc.domain.EncryptedStorageManager
 import fi.dvv.digiid.poc.domain.model.AuthState
-import fi.dvv.digiid.poc.domain.model.KeyInfo
+import fi.dvv.digiid.poc.domain.model.KeySecurityLevel
 import fi.dvv.digiid.poc.domain.repository.ProfileRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
@@ -74,19 +75,14 @@ class ProfileRepositoryImpl @Inject constructor(
         } ?: run {
             Timber.wtf("Key not found, generating a new one…")
             val kpg: KeyPairGenerator = KeyPairGenerator.getInstance(
-                KeyProperties.KEY_ALGORITHM_EC,
+                KEY_ALGORITHM_EC,
                 "AndroidKeyStore"
             )
             val parameterSpec: KeyGenParameterSpec = KeyGenParameterSpec.Builder(
                 PRIVATE_KEY_ALIAS,
-                KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
+                PURPOSE_SIGN or PURPOSE_VERIFY
             ).run {
-                setDigests(
-                    KeyProperties.DIGEST_SHA256,
-                    KeyProperties.DIGEST_SHA512,
-                    KeyProperties.DIGEST_NONE
-                )
-
+                setDigests(DIGEST_SHA256, DIGEST_SHA512, DIGEST_NONE)
                 build()
             }
 
@@ -94,16 +90,13 @@ class ProfileRepositoryImpl @Inject constructor(
             kpg.generateKeyPair()
         })
 
-    override val keyInfo = keyPair.map {
+    override val keySecurityLevel: Flow<KeySecurityLevel> = keyPair.map {
         val keyInfo = KeyFactory.getInstance(
             it.private.algorithm,
             "AndroidKeyStore"
         ).getKeySpec(it.private, android.security.keystore.KeyInfo::class.java)
 
-        KeyInfo(
-            it.private.algorithm,
-            keyInfo?.isInsideSecureHardware ?: false
-        )
+        keyInfo.securityLevel()
     }
 
     override suspend fun unlock(pinCode: String) {
@@ -177,6 +170,24 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
             }
         }.getOrNull()
+
+    private fun android.security.keystore.KeyInfo.securityLevel(): KeySecurityLevel {
+        return when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                when (securityLevel) {
+                    SECURITY_LEVEL_STRONGBOX -> KeySecurityLevel.STRONGBOX
+                    SECURITY_LEVEL_TRUSTED_ENVIRONMENT -> KeySecurityLevel.TEE
+                    SECURITY_LEVEL_UNKNOWN_SECURE -> KeySecurityLevel.LEGACY
+                    else -> KeySecurityLevel.NONE
+                }
+            }
+
+            @Suppress("DEPRECATION")
+            isInsideSecureHardware -> KeySecurityLevel.LEGACY
+
+            else -> KeySecurityLevel.NONE
+        }
+    }
 
     companion object {
         const val KEY_PIN_CODE = "user_pin_code"

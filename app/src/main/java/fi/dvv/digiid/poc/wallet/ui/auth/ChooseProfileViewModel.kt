@@ -31,7 +31,8 @@ class ChooseProfileViewModel @Inject constructor(
     override val pinCode = MutableStateFlow("")
     override val error = MutableStateFlow<Int?>(null)
 
-    val keyInfo = profileRepository.keyInfo.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    val keySecurityLevel = profileRepository.keySecurityLevel
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     val pemText = MutableStateFlow<String?>(null)
 

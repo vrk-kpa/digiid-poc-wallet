@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="fi.dvv.digiid.poc.domain.model.KeySecurityLevel" />
         <variable
             name="viewModel"
             type="fi.dvv.digiid.poc.wallet.ui.auth.ChooseProfileViewModel" />
@@ -36,29 +37,22 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/key_pair_value"
+                android:id="@+id/key_security_value"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:drawableEnd="@{viewModel.keySecurityLevel != KeySecurityLevel.NONE ? @drawable/ic_success : @drawable/ic_failure}"
                 android:gravity="center_vertical"
-                android:text="@{viewModel.keyInfo.algorithm}"
-                android:textAppearance="?attr/textAppearanceBody2" />
+                android:text="@{viewModel.keySecurityLevel.toString()}"
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:text="STRONGBOX"
+                tools:ignore="UseCompatTextViewDrawableXml" />
 
             <TextView
                 android:id="@+id/key_security_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@{viewModel.keyInfo.secure ? @drawable/ic_success : @drawable/ic_failure}"
                 android:gravity="center_vertical"
-                android:text="@string/create_profile_key_status"
-                android:textAppearance="?attr/textAppearanceCaption"
-                tools:ignore="UseCompatTextViewDrawableXml" />
-
-            <TextView
-                android:id="@+id/key_pair_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/create_profile_key_type"
+                android:text="@string/create_profile_key_security"
                 android:textAppearance="?attr/textAppearanceCaption" />
 
             <androidx.constraintlayout.helper.widget.Flow
@@ -81,7 +75,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                app:constraint_referenced_ids="key_pair_label,key_pair_value,key_security_label"
+                app:constraint_referenced_ids="key_security_label,key_security_value"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

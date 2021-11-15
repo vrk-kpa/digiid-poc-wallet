@@ -1,13 +1,13 @@
 package fi.dvv.digiid.poc.domain.repository
 
 import fi.dvv.digiid.poc.domain.model.AuthState
-import fi.dvv.digiid.poc.domain.model.KeyInfo
+import fi.dvv.digiid.poc.domain.model.KeySecurityLevel
 import kotlinx.coroutines.flow.Flow
 import java.security.cert.X509Certificate
 import javax.net.ssl.KeyManager
 
 interface ClientCertificateProvider {
-    val keyInfo: Flow<KeyInfo>
+    val keySecurityLevel: Flow<KeySecurityLevel>
     val keyManager: KeyManager
 }
 
