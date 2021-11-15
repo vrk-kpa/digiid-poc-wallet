@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="fi.dvv.digiid.poc.wallet.ui.auth.ChooseProfileViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/save_certificate_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:enabled="@{viewModel.certificateValid}"
+                android:onClick="@{() -> viewModel.importCertificate()}"
+                android:text="@string/create_profile_save_certificate"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/csr_input"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/key_pair_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@{viewModel.keyInfo.algorithm}"
+                android:textAppearance="?attr/textAppearanceBody2" />
+
+            <TextView
+                android:id="@+id/key_security_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@{viewModel.keyInfo.secure ? @drawable/ic_success : @drawable/ic_failure}"
+                android:gravity="center_vertical"
+                android:text="@string/create_profile_key_status"
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+            <TextView
+                android:id="@+id/key_pair_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/create_profile_key_type"
+                android:textAppearance="?attr/textAppearanceCaption" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow_create_csr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                app:constraint_referenced_ids="satu_input,create_csr_button"
+                app:flow_horizontalGap="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/flow_key_info" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow_key_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                app:constraint_referenced_ids="key_pair_label,key_pair_value,key_security_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/create_csr_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="@{!viewModel.satu.empty}"
+                android:onClick="@{() -> viewModel.createCSR()}"
+                android:text="@string/create_profile_create_csr" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/csr_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:hint="@string/create_profile_pem_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/flow_create_csr">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine|text"
+                    android:text="@={viewModel.pemText}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/satu_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/create_profile_satu_label">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="@={viewModel.satu}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>
