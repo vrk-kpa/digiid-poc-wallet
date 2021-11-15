@@ -25,4 +25,10 @@
     <string name="verify_credential_age_under">Alle %1$dv</string>
     <string name="verify_credential_other">Muu todistus</string>
     <string name="verify_credential_invalid">Todistuksen allekirjoitus on virheellinen</string>
+    <string name="create_profile_save_certificate">Tallenna varmenne</string>
+    <string name="create_profile_key_status">Tallennettu turvallisesti</string>
+    <string name="create_profile_key_type">Avaimen tyyppi:</string>
+    <string name="create_profile_create_csr">Luo CSR</string>
+    <string name="create_profile_pem_label">Varmenne</string>
+    <string name="create_profile_satu_label">SATU</string>
 </resources>

@@ -18,6 +18,7 @@ import okhttp3.tls.decodeCertificatePem
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import javax.net.ssl.SSLContext
 
 /**
  * Credentials module
@@ -43,11 +44,13 @@ interface CredentialModule {
         fun provideWalletService(profileRepository: ProfileRepository): WalletService {
             val certificates = HandshakeCertificates.Builder()
                 .addTrustedCertificate(BuildConfig.WALLET_CERTIFICATE_PEM.decodeCertificatePem())
-                .heldCertificate(requireNotNull(profileRepository.clientCertificate))
                 .build()
 
+            val sslContext = SSLContext.getInstance("TLS")
+            sslContext.init(arrayOf(profileRepository.keyManager), arrayOf(certificates.trustManager), null)
+
             val okHttpClient = OkHttpClient.Builder()
-                .sslSocketFactory(certificates.sslSocketFactory(), certificates.trustManager)
+                .sslSocketFactory(sslContext.socketFactory, certificates.trustManager)
                 .build()
 
             val retrofit = Retrofit.Builder().baseUrl(BuildConfig.WALLET_BASE_URL)
