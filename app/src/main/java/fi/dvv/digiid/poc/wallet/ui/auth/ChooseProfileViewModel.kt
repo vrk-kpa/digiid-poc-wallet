@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fi.dvv.digiid.poc.data.di.DefaultDispatcher
-import fi.dvv.digiid.poc.domain.model.UserProfile
 import fi.dvv.digiid.poc.domain.repository.ProfileRepository
 import fi.dvv.digiid.poc.wallet.R
 import kotlinx.coroutines.CoroutineDispatcher
@@ -12,20 +11,19 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.security.cert.X509Certificate
 import javax.inject.Inject
 
 @HiltViewModel
 class ChooseProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
-): ViewModel(), OnProfileClickListener, PINCodeEntryDelegate {
-    val profileList = profileRepository.availableProfiles
-
-    private var selectedProfile: UserProfile? = null
+): ViewModel(), PINCodeEntryDelegate {
+    private var clientCertificate: X509Certificate? = null
     private var selectedPINCode: String? = null
 
-    private val _profileSelectedEvent = Channel<Unit>(capacity = CONFLATED)
-    val profileSelectedEvent = _profileSelectedEvent.receiveAsFlow()
+    private val _profileSetEvent = Channel<Unit>(capacity = CONFLATED)
+    val profileSetEvent = _profileSetEvent.receiveAsFlow()
 
     private val _verifyPINCodeEvent = Channel<String>(capacity = CONFLATED)
     val verifyPINCodeEvent = _verifyPINCodeEvent.receiveAsFlow()
@@ -52,8 +50,11 @@ class ChooseProfileViewModel @Inject constructor(
     }
 
     fun importCertificate() {
-        pemText.value?.takeIf { certificateValid.value }?.let {
-            profileRepository.importCertificate(it)
+        pemText.value?.let { pem ->
+            profileRepository.parseCertificate(pem)?.let {
+                clientCertificate = it
+                _profileSetEvent.trySend(Unit)
+            }
         }
     }
 
@@ -81,16 +82,11 @@ class ChooseProfileViewModel @Inject constructor(
         }
 
         viewModelScope.launch(viewModelScope.coroutineContext + defaultDispatcher) {
-            profileRepository.setProfile(selectedProfile!!, selectedPINCode!!)
+            profileRepository.setProfile(clientCertificate!!, selectedPINCode!!)
         }
     }
 
     private fun validatePINCodeFormat(pinCode: String): Boolean {
         return pinCode.matches(Regex("^\\d{6}$"))
-    }
-
-    override fun chooseProfile(profile: UserProfile) {
-        selectedProfile = profile
-        _profileSelectedEvent.trySend(Unit)
     }
 }

@@ -18,8 +18,6 @@ import okhttp3.tls.decodeCertificatePem
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.security.KeyStore
-import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 
 /**
@@ -48,12 +46,8 @@ interface CredentialModule {
                 .addTrustedCertificate(BuildConfig.WALLET_CERTIFICATE_PEM.decodeCertificatePem())
                 .build()
 
-            val keyStore = KeyStore.getInstance("AndroidKeyStore")
-            keyStore.load(null)
-            val factory = KeyManagerFactory.getInstance("X509")
-            factory.init(keyStore, null)
             val sslContext = SSLContext.getInstance("TLS")
-            sslContext.init(factory.keyManagers, arrayOf(certificates.trustManager), null)
+            sslContext.init(arrayOf(profileRepository.keyManager), arrayOf(certificates.trustManager), null)
 
             val okHttpClient = OkHttpClient.Builder()
                 .sslSocketFactory(sslContext.socketFactory, certificates.trustManager)

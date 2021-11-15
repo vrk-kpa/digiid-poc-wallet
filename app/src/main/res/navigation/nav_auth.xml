@@ -45,21 +45,12 @@
     </fragment>
 
     <fragment
-        android:id="@+id/choose_profile_fragment"
-        android:name="fi.dvv.digiid.poc.wallet.ui.auth.ChooseProfileFragment"
-        android:label="ChooseRoleFragment"
-        tools:layout="@layout/fragment_choose_profile">
-        <action
-            android:id="@+id/toPINCodeEntry"
-            app:destination="@id/create_pin_fragment" />
-    </fragment>
-    <fragment
         android:id="@+id/create_profile_fragment"
         android:name="fi.dvv.digiid.poc.wallet.ui.auth.CreateProfileFragment"
         tools:layout="@layout/fragment_create_profile">
 
         <action
-            android:id="@+id/action_createProfileFragment_to_create_pin_fragment"
+            android:id="@+id/toCreatePIN"
             app:destination="@id/create_pin_fragment" />
     </fragment>
 </navigation>
