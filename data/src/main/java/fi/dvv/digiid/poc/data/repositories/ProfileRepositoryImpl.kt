@@ -1,8 +1,11 @@
 package fi.dvv.digiid.poc.data.repositories
 
+import android.content.Context
+import android.content.pm.PackageManager.FEATURE_STRONGBOX_KEYSTORE
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import fi.dvv.digiid.poc.data.di.IODispatcher
 import fi.dvv.digiid.poc.domain.EncryptedStorageManager
 import fi.dvv.digiid.poc.domain.model.AuthState
@@ -20,7 +23,6 @@ import org.bouncycastle.openssl.PEMParser
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder
-import timber.log.Timber
 import java.io.StringReader
 import java.io.StringWriter
 import java.net.Socket
@@ -36,6 +38,7 @@ import javax.security.auth.x500.X500Principal
 class ProfileRepositoryImpl @Inject constructor(
     @IODispatcher private val ioDispatcher: CoroutineDispatcher,
     private val encryptedStorage: EncryptedStorageManager,
+    @ApplicationContext private val context: Context,
 ) : ProfileRepository {
     override val authState = runBlocking {
         val pin = withContext(ioDispatcher) {
@@ -70,25 +73,40 @@ class ProfileRepositoryImpl @Inject constructor(
 
     private val keyPair = MutableStateFlow(
         (keystore.getEntry(PRIVATE_KEY_ALIAS, null) as? KeyStore.PrivateKeyEntry)?.let {
-            Timber.wtf("Found, wrapping it in a KeyPair")
             KeyPair(it.certificate.publicKey, it.privateKey)
-        } ?: run {
-            Timber.wtf("Key not found, generating a new one…")
+        } ?: createKeyPair()
+    )
+
+    private fun createKeyPair(): KeyPair {
+        fun builder(block: (KeyGenParameterSpec.Builder.() -> Unit)? = null): KeyPair {
             val kpg: KeyPairGenerator = KeyPairGenerator.getInstance(
                 KEY_ALGORITHM_EC,
                 "AndroidKeyStore"
             )
+
             val parameterSpec: KeyGenParameterSpec = KeyGenParameterSpec.Builder(
                 PRIVATE_KEY_ALIAS,
                 PURPOSE_SIGN or PURPOSE_VERIFY
             ).run {
+                block?.invoke(this)
                 setDigests(DIGEST_SHA256, DIGEST_SHA512, DIGEST_NONE)
                 build()
             }
 
             kpg.initialize(parameterSpec)
-            kpg.generateKeyPair()
-        })
+            return kpg.generateKeyPair()
+        }
+
+        return kotlin.runCatching {
+            builder {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    setIsStrongBoxBacked(
+                        context.packageManager.hasSystemFeature(FEATURE_STRONGBOX_KEYSTORE)
+                    )
+                }
+            }
+        }.getOrNull() ?: builder()
+    }
 
     override val keySecurityLevel: Flow<KeySecurityLevel> = keyPair.map {
         val keyInfo = KeyFactory.getInstance(
